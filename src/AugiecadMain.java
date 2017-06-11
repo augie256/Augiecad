@@ -19,7 +19,7 @@ public class AugiecadMain extends Application{
 	
 	//Load settings/preferences
 	Settings set = Settings.loadFromFile();
-	//awdaaa
+	//awdaaaa
 
 	//Create Bottom
 	TextField textBox = new TextField ();
