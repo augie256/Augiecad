@@ -1,8 +1,12 @@
+package kernel;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import drawing.CadDrawing;
+import javafx.stage.Stage;
 
 public class Settings implements Serializable{
 	
@@ -15,6 +19,7 @@ public class Settings implements Serializable{
 	public double PROGRAM_WIDTH = 1200;
 	public double PROGRAM_HEIGHT = 800;
 	public double HISTORY_BOX_HEIGHT = 50;
+	public double DRAWING_ACCURACY = 0.03125;
 		
 	
 	public static Settings loadFromFile(){
@@ -41,5 +46,10 @@ public class Settings implements Serializable{
 			ex.printStackTrace();
 			}
 		
+	}
+	
+	public void setSaveSize(Stage s) {
+		PROGRAM_WIDTH = s.getWidth();
+		PROGRAM_HEIGHT = s.getHeight();		
 	}
 }
