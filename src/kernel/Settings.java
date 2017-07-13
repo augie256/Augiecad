@@ -20,18 +20,32 @@ public class Settings implements Serializable{
 	public double PROGRAM_HEIGHT = 800;
 	public double HISTORY_BOX_HEIGHT = 50;
 	public double DRAWING_ACCURACY = 0.03125;
-		
+	private static Settings instance = null;
 	
-	public static Settings loadFromFile(){
+	private Settings(){
+		super();
+	}
+	
+	public static Settings getInstance(){
+		if(loadFromFile() && (instance != null)){
+			return instance;
+		}else{
+			instance = new Settings();
+			return instance;
+		}
+	} 
+	
+	private static boolean loadFromFile(){
 		try {
-			FileInputStream filein = new FileInputStream(filename);
-			ObjectInputStream objectin = new ObjectInputStream(filein);
-			Settings s = (Settings) objectin.readObject();
-			objectin.close();
-			System.out.println("The Object was succesfully loaded from a file");
-			return s;
+				FileInputStream filein = new FileInputStream(filename);
+				ObjectInputStream objectin = new ObjectInputStream(filein);
+				Settings s = (Settings) objectin.readObject();
+				objectin.close();
+				instance = s;				
+				return true;
 			} catch (Exception ex) {
-			return new Settings();
+				ex.printStackTrace();
+				return false;
 			}		
 	}
 	

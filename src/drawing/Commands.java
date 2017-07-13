@@ -13,14 +13,14 @@ public abstract class Commands {
 		public static final int LINE = 1;
 		public static final int CIRCLE = 2;
 		public static final int TRIM = 3;
-		private static boolean mouseEventOk = true;
-		private static boolean keyEventOk = true;
+		protected static boolean mouseEventOk = true;
+		protected static boolean keyEventOk = true;
 		
 	public static boolean invoke(int command, InputEvent e) {
 		switch (command) {
-	       case 1: return CadLine.invoke(e); 
-	       case 2: return CadCircle.invoke(e);
-	       case 3: return Trim.invoke(e);
+	       case LINE: return CadLine.invoke(e); 
+	       case CIRCLE: return CadCircle.invoke(e);
+	       case TRIM: return Trim.invoke(e);
 	       default: return false;
 		   }
 	}
@@ -39,7 +39,7 @@ public abstract class Commands {
 		textInput = "";
 	}
 
-	public static void input(String text) {
+	public static void setInput(String text) {
 		textInput = text;		
 	}
 
@@ -51,8 +51,9 @@ public abstract class Commands {
 	}
 	
 	protected static double scaled(double d){
-		return (d * CadDrawing.CURRENT_DRAWING.DRAWING_SCALE);
+		return (d * CadDrawing.CURRENT_DRAWING.getScale());
 	}
+	
 	
 	public static void setSettings(Settings set){
 		Commands.set = set;
