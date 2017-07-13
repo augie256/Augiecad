@@ -2,6 +2,7 @@ package kernel;
 import drawing.CadDrawing;
 import drawing.RCanvas;
 import javafx.application.Application;
+import javafx.beans.Observable;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -19,12 +20,13 @@ public class AugiecadMain extends Application{
 	public void start(Stage s) {
 	
 	//Load settings/new drawing
-	Settings set = Settings.loadFromFile();
+	Settings set = Settings.getInstance();
 	
-
 	//Create Bottom
 	TextField textBox = new TextField ();
 	textBox.setEditable(false);
+	textBox.setFocusTraversable(false);
+	
 	ListView<String> historyBox = new ListView<String>() ;
 	historyBox.setPrefHeight(set.HISTORY_BOX_HEIGHT);
 	historyBox.setMinHeight(50);
@@ -40,9 +42,12 @@ public class AugiecadMain extends Application{
 	b.setCenter(canvasHolder);
 	b.setBottom(v);
 	
+	//Create menu
+	MainMenuBar menu = new MainMenuBar();
+
 	//Create event Drawing and handlers
 	CadDrawing.CURRENT_DRAWING = new CadDrawing(set,set.DRAWING_ACCURACY);
-	HandleEvents e = new HandleEvents(drawArea, textBox, historyBox, s);
+	HandleEvents e = new HandleEvents(drawArea, textBox, historyBox, menu, s);
 	drawArea.setOnKeyPressed(k -> e.handle(k));
 	drawArea.setOnKeyPressed(k -> e.handle(k));
 	historyBox.setOnKeyPressed(k -> e.handle(k));
@@ -52,14 +57,21 @@ public class AugiecadMain extends Application{
 	s.setOnCloseRequest(w -> e.handle(w, set));
 	s.widthProperty().addListener(ns -> set.setSaveSize(s));
 	s.heightProperty().addListener(ns -> set.setSaveSize(s));
+	textBox.focusedProperty().addListener(c -> noFocus(drawArea));
+	historyBox.focusedProperty().addListener(c -> noFocus(drawArea));
 	
 	//Create scene and set stage properties
 	Scene f = new Scene(b,set.PROGRAM_WIDTH,set.PROGRAM_HEIGHT);
-	((BorderPane) f.getRoot()).setTop(new MainMenuBar(e,s));
+	((BorderPane) f.getRoot()).setTop(menu);
 	s.setTitle("AugieCAD");
 	s.setScene(f);
 	s.show();
 	drawArea.requestFocus();
+	}
+
+	private void noFocus(RCanvas drawArea) {
+		drawArea.requestFocus();
+		
 	}	
 	
 	

@@ -15,9 +15,7 @@ public class MainMenuBar extends MenuBar {
 	HandleEvents events;
 	Stage stage;
 	
-	MainMenuBar(HandleEvents e, Stage s){
-		this.events = e;
-		this.stage = s;
+	MainMenuBar(){
 		buildMenu();		
 	}
 

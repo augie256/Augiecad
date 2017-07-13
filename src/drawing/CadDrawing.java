@@ -1,61 +1,54 @@
 package drawing;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import kernel.HandleEvents;
 import kernel.Settings;
 
 public class CadDrawing {
 
 	public static CadDrawing CURRENT_DRAWING = null;
-	public double DRAWING_SCALE = 1;
+	private double drawingScale = 1;
 	public static double scale = 1;
-	public ObservableList<CadObjects> o;
+	public List<CadObjects> objects;
+	public List<CadObjects> selected;
 	private GraphicsContext gc;
 	public static RCanvas canvas;
 		
 	public CadDrawing(Settings s, double Accuracy) {
-		o = FXCollections.observableList(new ArrayList<CadObjects>());
+		objects = FXCollections.observableList(new ArrayList<CadObjects>());
 		CURRENT_DRAWING = this;
-	}
-
-	static public CadDrawing loadFromFile(String filepath){
-		try {
-			FileInputStream filein = new FileInputStream(filepath);
-			ObjectInputStream objectin = new ObjectInputStream(filein);
-			CadDrawing c = (CadDrawing) objectin.readObject();
-			objectin.close();
-			return c;
-			} catch (Exception ex) {
-			return CURRENT_DRAWING;
-			}		
 	}
 	
 	public void add(CadObjects obj){
-		o.add(obj);
+		objects.add(obj);
+		obj.id = objects.indexOf(obj);
 	}
 	
 	public void redrawAll(){
 		if (canvas!=null){canvas.clear();}
-		if (gc!=null){for(int i=0; i < o.size(); i++){o.get(i).cadDraw(gc);}
+		if (gc!=null){for(int i=0; i < objects.size(); i++){objects.get(i).cadDraw(gc);}
 	}
 		
 }
 
 	public void setGraphicsContext(GraphicsContext gc) {
-		this.gc = gc;		
+		this.gc = gc;
+		canvas = (RCanvas) gc.getCanvas();
 	}
 	
 	public void setScale(double d) {
-		this.DRAWING_SCALE = d;	
-		}
-		
-			
+		drawingScale = d;	
+	}
+
+	public double getScale() {
+		return drawingScale;	
+	}
+	
+	public CadObjects AttemptToSelect() {
+		return null;		
+	}
 	
 		
 }
