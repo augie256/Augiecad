@@ -14,10 +14,18 @@ public class MainMenuBar extends MenuBar {
 	Menu fileMenu;
 	HandleEvents events;
 	Stage stage;
+	private static MainMenuBar instance;
 	
-	MainMenuBar(){
+	private MainMenuBar(){
 		buildMenu();		
 	}
+	
+	public static MainMenuBar getInstance(){
+		if(instance == null) instance = new MainMenuBar();
+		return instance;
+
+	}
+
 
 	private void buildMenu() {
 		fileMenu = new Menu("File");
