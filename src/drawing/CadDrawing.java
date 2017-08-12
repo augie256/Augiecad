@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.scene.canvas.GraphicsContext;
+import kernel.CadMain;
 import kernel.Settings;
 
 public class CadDrawing {
@@ -13,8 +14,8 @@ public class CadDrawing {
 	public static double scale = 1;
 	public List<CadObjects> objects;
 	public List<CadObjects> selected;
-	private GraphicsContext gc;
-	public static RCanvas canvas;
+	private GraphicsContext gc = CadMain.gc;
+	public static RCanvas canvas = CadMain.drawArea;
 		
 	public CadDrawing(Settings s, double Accuracy) {
 		objects = FXCollections.observableList(new ArrayList<CadObjects>());
@@ -29,9 +30,9 @@ public class CadDrawing {
 	public void redrawAll(){
 		if (canvas!=null){canvas.clear();}
 		if (gc!=null){for(int i=0; i < objects.size(); i++){objects.get(i).cadDraw(gc);}
-	}
+		}
 		
-}
+	}
 
 	public void setGraphicsContext(GraphicsContext gc) {
 		this.gc = gc;
