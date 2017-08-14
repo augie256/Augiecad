@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import drawing.CadDrawing;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Settings implements Serializable{
@@ -22,12 +23,11 @@ public class Settings implements Serializable{
 	public double DRAWING_ACCURACY = 0.03125;
 	private static Settings instance = null;
 	
-	private Settings(){
-		super();
+	private Settings(){		
 	}
 	
 	public static Settings getInstance(){
-		if(loadFromFile() && (instance != null)){
+		if(loadFromFile()){
 			return instance;
 		}else{
 			instance = new Settings();
@@ -62,8 +62,8 @@ public class Settings implements Serializable{
 		
 	}
 	
-	public void setSaveSize(Stage s) {
-		PROGRAM_WIDTH = s.getWidth();
-		PROGRAM_HEIGHT = s.getHeight();		
+	public void setSaveSize(Scene scene) {
+		PROGRAM_WIDTH = scene.getWidth();
+		PROGRAM_HEIGHT = scene.getHeight(); 		
 	}
 }

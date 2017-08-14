@@ -1,9 +1,11 @@
 package kernel;
 import java.util.ArrayList;
 
+import drawing.CadCircle;
 import drawing.CadDrawing;
 import drawing.CadLine;
 import drawing.Commands;
+import drawing.Trim;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 
 public class HandleEvents{
@@ -21,8 +24,7 @@ public class HandleEvents{
 	private static final String VALID_TO_GO_IN_TEXTBOX = "abcdefghijklmnopqrstuvwxyzABCDEFGHILMNOPQRSTUVWXYZ1234567890,.@";
 	private static HandleEvents instance = null;
 	
-	private ObservableList<String> historyStrings;	 
-	private int currentCommand = 0; //0 indicates waiting for command
+	private ObservableList<String> historyStrings;	
 	private static String echo = "";
 	
 	
@@ -38,7 +40,7 @@ public class HandleEvents{
 	}
 
 	public static void setEcho(String echo){
-		
+		HandleEvents.echo = echo;
 	}
 	
 	public void handle(KeyEvent k){
@@ -57,7 +59,7 @@ public class HandleEvents{
 		if(iShouldHandle(m)){
 	if (m.getButton() == MouseButton.PRIMARY) leftClick(m);
 	if (m.getButton() == MouseButton.SECONDARY) rightClick(m);
-	if (m.getEventType()== MouseEvent.MOUSE_MOVED) mouseMoved();
+	if (m.getEventType()== MouseEvent.MOUSE_MOVED) mouseMoved(m);
 		}
 	
 	}
@@ -71,7 +73,7 @@ public class HandleEvents{
 	}
 	
 	private void enterPressed(InputEvent e) {
-		if(currentCommand>0){
+		if(Commands.currentCommand>0){
 			attemptCommandInvoke(e,CadMain.textBox.getText());
 			}else{
 				if(GetCommand(e)) attemptCommandInvoke(e,CadMain.textBox.getText());
@@ -79,6 +81,7 @@ public class HandleEvents{
 		historyStrings.add(CadMain.textBox.getText()+echo);
 		CadMain.historyBox.setItems(reversed(historyStrings));
 		CadMain.textBox.clear();
+		echo = "";
 	}
 	
 	private void abort(KeyEvent k) {
@@ -103,7 +106,6 @@ public class HandleEvents{
 	}
 	
 	private void textBoxEntry(KeyEvent k) {
-		System.out.println("text box entry");
 		if(k.isShiftDown() && (k.getCode() == KeyCode.DIGIT2)){
 			CadMain.textBox.appendText("@");
 			return;
@@ -116,14 +118,15 @@ public class HandleEvents{
 	private boolean iShouldHandle(InputEvent event) {
 		if(event.getEventType().toString() == "KEY_PRESSED"){return true;
 		}else if(event.getEventType().toString() == "MOUSE_CLICKED"){return true;
+		}else if(event.getEventType().toString() == "MOUSE_MOVED"){return true;
 		}else return false;
 	}
 	
 	private void leftClick(MouseEvent m) {
-		if(currentCommand == 0) {CadDrawing.CURRENT_DRAWING.AttemptToSelect();}
+		if(Commands.currentCommand == 0) {CadDrawing.CURRENT_DRAWING.AttemptToSelect();}
 		else{
 			CadMain.textBox.appendText(m.getX() + "," + m.getY());
-			Commands.setInput(CadMain.textBox.getText());again(Commands.invoke(Commands.LINE, m));
+			Commands.invoke(Commands.currentCommand, m);
 			historyStrings.add(CadMain.textBox.getText());
 			CadMain.historyBox.setItems(reversed(historyStrings));
 			CadMain.textBox.clear();
@@ -134,23 +137,25 @@ public class HandleEvents{
 		enterPressed(m);		
 	}
 	
-	private void mouseMoved() {
-			
+	private void mouseMoved(MouseEvent m) {
+		CadDrawing.CURRENT_DRAWING.redrawAll();
+		CadMain.gc.setStroke(Color.GRAY);
+		CadMain.gc.strokeRect(m.getX()-10, m.getY()-10, 20, 20);		
 	}
 	
 	private void attemptCommandInvoke(InputEvent e, String input){
-	switch(currentCommand){
-		case Commands.LINE:{if(CadLine.validInput(input)){Commands.setInput(CadMain.textBox.getText());again(Commands.invoke(Commands.LINE, e));break;}break;}	
-		case Commands.CIRCLE:{Commands.setInput(CadMain.textBox.getText());	again(Commands.invoke(Commands.CIRCLE, e)); break;}
-		case Commands.TRIM:{Commands.setInput(CadMain.textBox.getText()); again(Commands.invoke(Commands.TRIM, e)); break;}
-		//default:Commands.setInput(CadMain.textBox.getText() + " ??");
+	switch(Commands.currentCommand){
+		case Commands.LINE:{if(CadLine.validInput(input)){Commands.invoke(Commands.LINE, e);}break;}
+		case Commands.CIRCLE:{if(CadCircle.validInput(input)){Commands.invoke(Commands.CIRCLE, e);}break;}
+		case Commands.TRIM:{if(Trim.validInput(input)){Commands.invoke(Commands.TRIM, e);}break;}
+		default: echo = "??";
 	  }
 	}
 	
 	private boolean GetCommand(InputEvent e) {
 		switch(CadMain.textBox.getText().toUpperCase()){
-		case "L": currentCommand = Commands.LINE;return true;
-		case "C": currentCommand = Commands.CIRCLE;return true;
+		case "L": Commands.currentCommand = Commands.LINE;return true;
+		case "C": Commands.currentCommand = Commands.CIRCLE;return true;
 		default: return false;}
 	}
 	
@@ -159,10 +164,5 @@ public class HandleEvents{
 		for (int i=0; i<o.size(); i++){	if (i<100) reversed.add(o.get((o.size()-i)-1));}
 		return reversed;
 	}
-	
-	private void again(boolean more) {
-		if (!more) currentCommand = 0;
 		
-	}
-	
 }

@@ -13,7 +13,9 @@ public abstract class CadObjects extends Commands  {
 	static MouseEvent currentMouseEvent;
 		
 	public abstract void cadDraw(GraphicsContext gc);
-	//public abstract void intersects();
+	public abstract void intersects();
+	public abstract void select();
+	public abstract void unselect();
 	
 	
 }

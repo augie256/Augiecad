@@ -5,30 +5,16 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class RCanvas extends Canvas {
-	Cursor tee;
+	Cursor tee = Cursor.CROSSHAIR;
 	
 	public RCanvas() {
-	widthProperty().addListener(evt -> redrawAll());
-	heightProperty().addListener(evt -> redrawAll());
+		
+	widthProperty().addListener(evt -> CadDrawing.CURRENT_DRAWING.redrawAll());
+	heightProperty().addListener(evt -> CadDrawing.CURRENT_DRAWING.redrawAll());
 	setManaged(false);
-	tee = Cursor.CROSSHAIR;
 	setCursor(tee);
 	}
-	
-	
-	
-	public void redrawAll() {
-		clear();
-		if (CadDrawing.CURRENT_DRAWING != null){
-			CadDrawing.CURRENT_DRAWING.redrawAll();
-		}
-	}
 
-
-	public void draw() {
-
-	}
-	
 	public void clear(){
 		double width = getWidth();
 		double height = getHeight();
