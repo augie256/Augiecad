@@ -12,6 +12,7 @@ import javafx.scene.control.Menu;
 public class MainMenuBar extends MenuBar {
  	
 	Menu fileMenu;
+	Menu settingsMenu;
 	HandleEvents events;
 	Stage stage;
 	private static MainMenuBar instance;
@@ -28,13 +29,24 @@ public class MainMenuBar extends MenuBar {
 
 
 	private void buildMenu() {
+		// File
 		fileMenu = new Menu("File");
 		MenuItem open = new MenuItem("Open");
 		MenuItem save = new MenuItem("Save");
 		fileMenu.getItems().addAll(open, save);
 	    open.setOnAction(a -> open());
 	    save.setOnAction(a -> save());
-		this.getMenus().addAll(fileMenu);
+	    //settings
+	    settingsMenu = new Menu("Settings");
+	    MenuItem options = new MenuItem("Options");
+	    options.setOnAction(a -> settings());
+	    settingsMenu.getItems().addAll(options);
+		this.getMenus().addAll(fileMenu,settingsMenu);
+	}
+
+	private void settings() {			
+		CadMain.set.showSettingBox();
+		
 	}
 
 	private Object open() {

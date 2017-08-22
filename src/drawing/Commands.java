@@ -7,36 +7,38 @@ import kernel.Settings;
 
 public abstract class Commands {
 
-	protected static final TextField textBox = CadMain.textBox;
-	protected static Settings set = Settings.getInstance();
-	public static String textInput = "";
+	public static int currentCommand = 0;
+	protected static final TextField TEXT_BOX = CadMain.textBox;
+	protected static final Settings SET = Settings.getInstance();
+	protected static final Step STEP = Step.getInstance();
 	public static final int LINE = 1;
 	public static final int CIRCLE = 2;
-	public static final int TRIM = 3;
+	public static final int ERASE = 3;
+	public static final int TRIM = 4;
 
 	public static boolean invoke(int command, InputEvent e) {
 		switch (command) {
 		case LINE:
-			return CadLine.invoke(e);
+			if(CadLine.invoke(e)){currentCommand = LINE;return true;
+			}else{finish();	return false;}
 		case CIRCLE:
-			return CadCircle.invoke(e);
+			if(CadCircle.invoke(e)){currentCommand = CIRCLE;return true;
+			}else{finish(); return false;}
+		case ERASE:
+			if(Erase.invoke(e)){currentCommand = ERASE;return true;
+			}else{finish(); return false;}
 		case TRIM:
-			return Trim.invoke(e);
-		default:
-			return false;
+			if(CadLine.invoke(e)){currentCommand = TRIM;return true;
+			}else{finish(); return false;}
+		default: finish(); return false;
 		}
 	}
 
 	protected static void finish() {
-		textInput = "";
-	}
-
-	public static void setInput(String text) {
-		textInput = text;
+		currentCommand = 0;
 	}
 
 	public static void abort() {
-		textInput = "";
 		CadLine.abort();
 	}
 

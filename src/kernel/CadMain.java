@@ -31,7 +31,11 @@ public class CadMain extends Application{
 	@Override
 	public void start(Stage s) {
 	stage = s;
-			
+	
+	//Create menu and drawing
+	menu = MainMenuBar.getInstance();
+	CadDrawing.CURRENT_DRAWING = new CadDrawing(set.DRAWING_ACCURACY);
+	
 	//Create Bottom
 	textBox.setEditable(false);
 	textBox.setFocusTraversable(false);
@@ -49,10 +53,6 @@ public class CadMain extends Application{
 	b.setCenter(canvasHolder);
 	b.setBottom(v);
 	
-	//Create menu
-	menu = MainMenuBar.getInstance();
-	CadDrawing.CURRENT_DRAWING = new CadDrawing(set,set.DRAWING_ACCURACY);
-	
 	//Create event handlers
 	HandleEvents e = HandleEvents.getInstance();
 	drawArea.setOnKeyPressed(k -> e.handle(k));
@@ -62,13 +62,13 @@ public class CadMain extends Application{
 	drawArea.setOnMouseClicked(m -> e.handle(m));
 	drawArea.setOnMouseMoved(m -> e.handle(m));
 	s.setOnCloseRequest(w -> e.handle(w, set));
-	s.widthProperty().addListener(ns -> set.setSaveSize(s));
-	s.heightProperty().addListener(ns -> set.setSaveSize(s));
 	textBox.focusedProperty().addListener(c -> noFocus());
 	historyBox.focusedProperty().addListener(c -> noFocus());
 	
 	//Create scene and set stage properties
 	scene = new Scene(b,set.PROGRAM_WIDTH,set.PROGRAM_HEIGHT);
+	scene.widthProperty().addListener(ns -> set.setSaveSize(scene));
+	scene.heightProperty().addListener(ns -> set.setSaveSize(scene));
 	((BorderPane) scene.getRoot()).setTop(menu);
 	s.setTitle("AugieCAD");
 	s.setScene(scene);

@@ -1,11 +1,16 @@
 package kernel;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import drawing.CadDrawing;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Settings implements Serializable{
@@ -22,12 +27,11 @@ public class Settings implements Serializable{
 	public double DRAWING_ACCURACY = 0.03125;
 	private static Settings instance = null;
 	
-	private Settings(){
-		super();
+	private Settings(){		
 	}
 	
 	public static Settings getInstance(){
-		if(loadFromFile() && (instance != null)){
+		if(loadFromFile()){
 			return instance;
 		}else{
 			instance = new Settings();
@@ -62,8 +66,30 @@ public class Settings implements Serializable{
 		
 	}
 	
-	public void setSaveSize(Stage s) {
-		PROGRAM_WIDTH = s.getWidth();
-		PROGRAM_HEIGHT = s.getHeight();		
+	public void setSaveSize(Scene scene) {
+		PROGRAM_WIDTH = scene.getWidth();
+		PROGRAM_HEIGHT = scene.getHeight(); 		
+	}
+	
+	public void showSettingBox(){
+		System.out.println("Trying to display box");
+		Parent root;
+		FXMLLoader f = new FXMLLoader(getClass().getResource("SettingsDialogBox.fxml"));
+		try {
+			root = f.load();
+			System.out.println(root.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		Scene pop = new Scene(root);
+		Stage dialog = new Stage();
+		dialog.setScene(pop);
+		dialog.initOwner(CadMain.stage);
+		dialog.initModality(Modality.WINDOW_MODAL);
+		dialog.setResizable(false);
+		dialog.setTitle("Settings");
+		dialog.show();
 	}
 }
