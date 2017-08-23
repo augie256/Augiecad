@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import drawing.CadDrawing;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -72,14 +71,13 @@ public class Settings implements Serializable{
 	}
 	
 	public void showSettingBox(){
-		System.out.println("Trying to display box");
+		MyFXMLController xml;
 		Parent root;
-		FXMLLoader f = new FXMLLoader(getClass().getResource("SettingsDialogBox.fxml"));
+		FXMLLoader loader = new FXMLLoader(instance.getClass().getResource("SettingsDialogBox.fxml"));
 		try {
-			root = f.load();
-			System.out.println(root.toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			root = loader.load();
+			xml = loader.getController();
+		} catch (IOException e) {			
 			e.printStackTrace();
 			return;
 		}
@@ -91,5 +89,7 @@ public class Settings implements Serializable{
 		dialog.setResizable(false);
 		dialog.setTitle("Settings");
 		dialog.show();
-	}
+		xml.getText().setText(Double.toString(DRAWING_ACCURACY));
+		}
+	
 }
