@@ -10,6 +10,7 @@ public class MyFXMLController {
 
 	@FXML public TextField acc;
 	@FXML public Button cancel;
+	@FXML public Button save;
 	
 	
 	public MyFXMLController(){
