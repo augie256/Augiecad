@@ -23,8 +23,7 @@ public class CadDrawing {
 	}
 	
 	public void add(CadObjects obj){
-		objects.add(obj);
-		obj.id = objects.indexOf(obj);
+		objects.add(obj);		
 		redrawAll();
 	}
 	

@@ -8,6 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import kernel.CadDrawing;
 import kernel.CadMain;
 import kernel.HandleEvents;
@@ -94,27 +95,15 @@ public class CadCircle extends CadObjects{
 		}
 	}
 
-	@Override
-	public void intersects() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void select() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void unselect() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public static void abort() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean intersects(Rectangle rectangle) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	

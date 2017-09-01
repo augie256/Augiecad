@@ -9,7 +9,6 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class CadObjects extends Commands  {
 	
-	public int id=0;
 	protected boolean selected = false;
 	static int currentStep = 0;
 	static KeyEvent currentKeyEvent;

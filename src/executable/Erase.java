@@ -13,6 +13,7 @@ public class Erase extends Commands {
 			if(o.isSelected()){
 				System.out.println(o.isSelected());
 				CadDrawing.CURRENT_DRAWING.remove(o);
+				o = null;
 			}
 		}
 		return false;
