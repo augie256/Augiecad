@@ -1,6 +1,4 @@
 package kernel;
-import drawing.CadDrawing;
-import drawing.RCanvas;
 import javafx.application.Application;
 import javafx.beans.Observable;
 import javafx.scene.Scene;

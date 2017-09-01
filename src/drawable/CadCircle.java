@@ -1,28 +1,40 @@
-package drawing;
+package drawable;
 
+import executable.Step;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Circle;
+import kernel.CadDrawing;
 import kernel.CadMain;
 import kernel.HandleEvents;
 
-public class CadLine extends CadObjects {
+public class CadCircle extends CadObjects{
 
 	protected static Point2D p1 = null;
 	protected static Point2D p2 = null;
-
-	public static void abort() {
-		currentStep = 0;
-		p1 = null;
-		p2 = null;
-	}
-
 	
-
+	protected Circle circle;
+	protected Point2D center;
+	protected Point2D upLeftBounds;
+	protected double width;
+	
+// constructor method(s)----------------------------------------------------------------------------------------------		
+	public CadCircle(Point2D center, Point2D radius) {
+		this.center = center;
+		circle = new Circle();
+		circle.setCenterX(center.getX());
+		circle.setCenterY(center.getY());
+		circle.setRadius(radius.distance(center));
+		upLeftBounds = new Point2D(center.getX()-radius.distance(center),center.getY()-radius.distance(center));
+		width = radius.distance(center) * 2;
+		
+		
+	}
+	
 	public static boolean invoke(InputEvent evt) {
 		KeyEvent k = null;
 		MouseEvent m = null;
@@ -37,12 +49,12 @@ public class CadLine extends CadObjects {
 		case 2: {step2(k, m);return false;}
 		default: {init();return true;}
 		}
-	}
+	}	
 	
 	private static void init() {
 		TEXT_BOX.setPromptText("Enter first point");
 		currentStep = 1;
-		HandleEvents.setEcho("ine");
+		HandleEvents.setEcho("ircle");
 	}
 
 	private static void step1(KeyEvent k, MouseEvent m) {
@@ -61,29 +73,17 @@ public class CadLine extends CadObjects {
 		} else {
 			p2 = Step.parseFromText(CadMain.textBox.getText(),p1);
 		}		
-		CadDrawing.CURRENT_DRAWING.add(new CadLine(p1, p2));		
-		abort();
+		CadDrawing.CURRENT_DRAWING.add(new CadCircle(p1, p2));		
+		abortAll();
 		TEXT_BOX.setPromptText(HandleEvents.DEFAULT_PROMPT);
 	}
 
-	protected Point2D end = null;
-	protected Line line = null;
-	protected Point2D mid = null;
-	protected Point2D start = null;
 
-	// constructor method(s)----------------------------------------------------------------------------------------------
-	public CadLine(Point2D start, Point2D end) {
-		this.start = start;
-		this.end = end;
-		mid = start.midpoint(end);
-		line = new Line(start.getX(), start.getY(), end.getX(), end.getY());
-	}
-
-	// instance method(s)-------------------------------------------------------------------------------------------------
 	@Override
 	public void cadDraw(GraphicsContext gc) {
+	
 		gc.setStroke(Color.WHITE);
-		gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
+		gc.strokeOval(upLeftBounds.getX(), upLeftBounds.getY(),width, width);
 	}
 
 	public static boolean validInput(String input) {
@@ -92,10 +92,7 @@ public class CadLine extends CadObjects {
 		case 2:return Step.validInput(input, true, true, true);
 		default: return true; // currestStep = 0
 		}
-		
 	}
-
-
 
 	@Override
 	public void intersects() {
@@ -103,15 +100,11 @@ public class CadLine extends CadObjects {
 		
 	}
 
-
-
 	@Override
 	public void select() {
 		// TODO Auto-generated method stub
 		
 	}
-
-
 
 	@Override
 	public void unselect() {
@@ -119,4 +112,11 @@ public class CadLine extends CadObjects {
 		
 	}
 
+	public static void abort() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	
 }

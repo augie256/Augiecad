@@ -1,10 +1,12 @@
-package drawing;
+package kernel;
 import java.util.ArrayList;
 import java.util.List;
 
+import drawable.CadObjects;
 import javafx.collections.FXCollections;
 import javafx.scene.canvas.GraphicsContext;
-import kernel.CadMain;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 
 public class CadDrawing {
 
@@ -12,7 +14,6 @@ public class CadDrawing {
 	private double drawingScale = 1;
 	public static double scale = 1;
 	public List<CadObjects> objects;
-	public List<CadObjects> selected;
 	private GraphicsContext gc = CadMain.gc;
 	public static RCanvas canvas = CadMain.drawArea;
 		
@@ -25,6 +26,12 @@ public class CadDrawing {
 		objects.add(obj);
 		obj.id = objects.indexOf(obj);
 		redrawAll();
+	}
+	
+	public void remove(CadObjects obj){
+		System.out.println(objects.indexOf(obj));
+		objects.remove(objects.indexOf(obj));
+		
 	}
 	
 	public void redrawAll(){
@@ -49,9 +56,14 @@ public class CadDrawing {
 		return drawingScale;	
 	}
 	
-	public CadObjects AttemptToSelect() {
-		return null;		
+	public void AttemptToSelect(MouseEvent e) {
+		for(CadObjects o:objects){if(o.intersects(new Rectangle(e.getX()-10,e.getY()-10,20,20))){o.select();}}
+		redrawAll();		
 	}
 	
-		
+	public void esc(){
+		for(CadObjects o:objects){o.unselect();}
+		redrawAll();
+	}	
+	
 }
