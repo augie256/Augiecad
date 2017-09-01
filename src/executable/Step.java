@@ -1,4 +1,4 @@
-package drawing;
+package executable;
 
 import javafx.geometry.Point2D;
 import kernel.HandleEvents;

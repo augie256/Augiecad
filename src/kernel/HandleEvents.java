@@ -1,11 +1,11 @@
 package kernel;
 import java.util.ArrayList;
 
-import drawing.CadCircle;
-import drawing.CadDrawing;
-import drawing.CadLine;
-import drawing.Commands;
-import drawing.Trim;
+import drawable.CadCircle;
+import drawable.CadLine;
+import executable.Commands;
+import executable.Erase;
+import executable.Trim;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -85,7 +85,7 @@ public class HandleEvents{
 	}
 	
 	private void abort(KeyEvent k) {
-		Commands.abort();
+		Commands.abortAll();
 		
 	}
 	
@@ -123,7 +123,7 @@ public class HandleEvents{
 	}
 	
 	private void leftClick(MouseEvent m) {
-		if(Commands.currentCommand == 0) {CadDrawing.CURRENT_DRAWING.AttemptToSelect();}
+		if(Commands.currentCommand == 0) {CadDrawing.CURRENT_DRAWING.AttemptToSelect(m);}
 		else{
 			CadMain.textBox.appendText(m.getX() + "," + m.getY());
 			Commands.invoke(Commands.currentCommand, m);
@@ -148,6 +148,7 @@ public class HandleEvents{
 		case Commands.LINE:{if(CadLine.validInput(input)){Commands.invoke(Commands.LINE, e);}break;}
 		case Commands.CIRCLE:{if(CadCircle.validInput(input)){Commands.invoke(Commands.CIRCLE, e);}break;}
 		case Commands.TRIM:{if(Trim.validInput(input)){Commands.invoke(Commands.TRIM, e);}break;}
+		case Commands.ERASE:{Commands.invoke(Commands.ERASE, e);}break;
 		default: echo = "??";
 	  }
 	}
@@ -156,6 +157,7 @@ public class HandleEvents{
 		switch(CadMain.textBox.getText().toUpperCase()){
 		case "L": Commands.currentCommand = Commands.LINE;return true;
 		case "C": Commands.currentCommand = Commands.CIRCLE;return true;
+		case "E": Commands.currentCommand = Commands.ERASE;return true;
 		default: return false;}
 	}
 	

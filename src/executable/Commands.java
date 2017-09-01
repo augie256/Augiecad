@@ -1,7 +1,10 @@
-package drawing;
+package executable;
 
+import drawable.CadCircle;
+import drawable.CadLine;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputEvent;
+import kernel.CadDrawing;
 import kernel.CadMain;
 import kernel.Settings;
 
@@ -36,10 +39,15 @@ public abstract class Commands {
 
 	protected static void finish() {
 		currentCommand = 0;
+		abortAll();
 	}
 
-	public static void abort() {
+	public static void abortAll() {
 		CadLine.abort();
+		CadCircle.abort();
+		Erase.abort();
+		Trim.abort();
+		CadDrawing.CURRENT_DRAWING.esc();
 	}
 
 	protected static double scaled(double d) {

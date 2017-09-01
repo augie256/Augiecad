@@ -1,4 +1,4 @@
-package drawing;
+package kernel;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
